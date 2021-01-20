@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-                                                                <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
@@ -14,49 +13,36 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <!--
-           <version.fuse>7.7.0.fuse-sb2-770010-redhat-00001</version.fuse>
-           <version.fuse>7.8.0.fuse-sb2-780038-redhat-00001</version.fuse>
-        --> 
-        <version.fuse>7.8.0.fuse-sb2-780038-redhat-00001</version.fuse>
-        
-    </properties>
+    <!--
+          <version.fuse>7.8.0.fuse-sb2-780038-redhat-00001</version.fuse>
+        -->
+    <version.fuse>7.7.0.fuse-sb2-770010-redhat-00001</version.fuse>
+    <activemq.basedir>${project.basedir}/../../../..</activemq.basedir>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.jboss.redhat-fuse</groupId>
-                <artifactId>fuse-springboot-bom</artifactId>
-                <version>${version.fuse}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.jboss.redhat-fuse</groupId>
+        <artifactId>fuse-springboot-bom</artifactId>
+        <version>${version.fuse}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
 
   <dependencies>
-
-    <!-- Spring Boot -->
+    <!-- Autoreload on changes
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-starter-tomcat</artifactId>
-        </exclusion>
-      </exclusions>
+      <artifactId>spring-boot-devtools</artifactId>
+      <optional>true</optional>
+      <scope>runtime</scope>
     </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-undertow</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
-    </dependency>
-
+ -->
     <!-- Camel -->
     <dependency>
       <groupId>org.apache.camel</groupId>
@@ -68,7 +54,7 @@
     </dependency>
 
     <!-- Test -->
-    <dependency>
+    <!-- <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
@@ -77,15 +63,102 @@
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-test-spring</artifactId>
       <scope>test</scope>
+    </dependency> -->
+
+    <!-- Messaging -->
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-amqp-starter</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-pool</artifactId>
+    </dependency>
+
+    <!--
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-broker</artifactId>
+    </dependency> -->
+    <!-- <dependency>
+      <groupId>org.amqphub.spring</groupId>
+      <artifactId>amqp-10-jms-spring-boot-starter</artifactId>
+    </dependency> -->
+
   </dependencies>
+
 
   <build>
     <plugins>
+      <!--
       <plugin>
-          <groupId>org.jboss.redhat-fuse</groupId>
-          <artifactId>spring-boot-maven-plugin</artifactId>
-          <version> ${version.fuse}</version>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>artemis-maven-plugin</artifactId>
+        <version>2.13.0.redhat-00006</version>
+        <executions>
+          <execution>
+            <id>create</id>
+            <goals>
+              <goal>create</goal>
+            </goals>
+            <configuration>
+              <configuration>${basedir}/target/classes/activemq/server0</configuration>
+              <ignore>${noServer}</ignore>
+            </configuration>
+          </execution>
+           <execution>
+            <id>start</id>
+            <goals>
+              <goal>cli</goal>
+            </goals>
+            <configuration>
+              <ignore>${noServer}</ignore>
+              <spawn>true</spawn>
+              <testURI>tcp://localhost:61616</testURI>
+              <args>
+                <param>run</param>
+              </args>
+            </configuration>
+          </execution>
+          <execution>
+            <id>runClient</id>
+            <goals>
+              <goal>runClient</goal>
+            </goals>
+            <configuration>
+              <clientClass>com.redhat.reproducer.MySpringBootApplication</clientClass>
+            </configuration>
+          </execution> -->
+      <!-- <execution>
+            <id>stop</id>
+            <goals>
+              <goal>cli</goal>
+            </goals>
+            <configuration>
+              <ignore>${noServer}</ignore>
+              <args>
+                <param>stop</param>
+              </args>              
+            </configuration>
+          </execution> 
+      </executions>
+      <dependencies>
+        <dependency>
+          <groupId>com.redhat.reproducer</groupId>
+          <artifactId>cmlxmlnotloaded</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+      </plugin>
+      -->
+      <plugin>
+        <groupId>org.jboss.redhat-fuse</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version> ${version.fuse}</version>
         <executions>
           <execution>
             <goals>

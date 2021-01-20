@@ -1,0 +1,10 @@
+camel:
+    springboot:
+        name: syrius--api-v1
+messaging:
+    host: localhost
+    port: 61616
+    protocol: amqp
+    username: admin
+    password: admin
+    queue: amqp:queue:test::test

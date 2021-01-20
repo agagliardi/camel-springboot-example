@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="jmsConnectionFactory" class="org.apache.qpid.jms.JmsConnectionFactory">
+        <property name="remoteURI" value="${messaging.protocol}://${messaging.host}:${messaging.port}" />
+        <property name="username" value="${messaging.username}" />
+        <property name="password" value="${messaging.password}" />
+    </bean>
+
+    <bean id="pooledConnectionFactory" class="org.apache.activemq.jms.pool.PooledConnectionFactory">
+        <property name="connectionFactory" ref="jmsConnectionFactory" />
+    </bean>
+
+    <bean id="amqp" class="org.apache.camel.component.amqp.AMQPComponent">
+        <property name="connectionFactory" ref="pooledConnectionFactory" />
+        <property name="transacted" value="true" />
+        <property name="lazyCreateTransactionManager" value="false" />
+    </bean>
+
+</beans>

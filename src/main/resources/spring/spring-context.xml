@@ -1,0 +1,33 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+  <import resource="amq.xml" />
+
+  <camelContext xmlns="http://camel.apache.org/schema/spring" id="dlqtest" streamCache="true" trace="true">
+
+    <!-- error handling -->
+    <onException>
+      <exception>java.lang.Exception</exception>
+      <handled>
+        <constant>true</constant>
+      </handled>
+      <log message="${exception.message}" />
+      <rollback markRollbackOnly="true" message="${exception.message}" />
+    </onException>
+
+    <route autoStartup="true" >
+      <from uri="{{messaging.queue}}" />
+      <throwException exceptionType="java.lang.RuntimeException" message="Fake exception" />
+    </route>
+
+    <route id="test" autoStartup="true" trace="true">
+      <from uri="timer:tick?fixedRate=true&amp;repeatCount=1&amp;delay=1s" />
+      <log message="Tick" />
+      <setBody>
+        <constant>test message</constant>
+      </setBody>
+      <inOnly uri="{{messaging.queue}}" />
+    </route>
+  </camelContext>
+
+</beans>

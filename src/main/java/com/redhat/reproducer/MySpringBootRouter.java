@@ -14,7 +14,7 @@ public class MySpringBootRouter extends RouteBuilder {
 
     @Override
     public void configure() {
-        from("timer://foo?fixedRate=true&period=1000").routeId("javaDSL").to("log:hello from Java DSL");
+        // from("timer://foo?fixedRate=true&period=1000").routeId("javaDSL").to("log:hello from Java DSL");
     }
 
 }
