@@ -31,3 +31,4 @@ hs_err_pid*
 # Local History for Visual Studio Code
 .history/
 target
+src/main/resources/application-redhat.properties

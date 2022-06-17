@@ -1,13 +1,49 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-  <camelContext id="SampleCamel" xmlns="http://camel.apache.org/schema/spring">
+
+  <bean id="client" class="com.redhat.reproducer.AWSClientFactory">
+    <property name="endpoint" value="${aws.endpoint}" />
+    <property name="accessKey" value="${aws.accessKey}" />
+    <property name="secretKey" value="${aws.secretKey}" />
+  </bean>
+
+
+  <camelContext id="SampleCamel"
+    xmlns="http://camel.apache.org/schema/spring">
     <route id="springXML">
       <from uri="timer://foo?fixedRate=true&amp;period=1000" />
       <to uri="log:hello from Spring XML" />
     </route>
+
+    <route id="log-route">
+      <from uri="timer:foo?period=5000"/>
+      <setBody>
+        <simple>Hello from Fuse based Camel route!</simple>
+      </setBody>
+      <to uri="aws-s3://{{aws.bucket}}?amazonS3Client=#client&amp;operation=listBuckets"/>
+      <log message="\n${headers} \n${body}"/>
+    </route>
+    <route id="toS3">
+      <from uri="file:/tmp/s3-in"/>
+      <setHeader headerName="CamelAwsS3Key">
+        <simple>${in.headers.CamelFileName}</simple>
+      </setHeader>
+      <log message="File to send \n${headers}"/>
+      <to uri="aws-s3://{{aws.bucket}}?amazonS3Client=#client"/>
+      <log message="File sent \n${headers}"/>
+    </route>
+    <route id="fromS3">
+      <from uri="aws-s3://{{aws.bucket}}?amazonS3Client=#client&amp;delay=5000&amp;maxMessagesPerPoll=1&amp;prefix=testFile"/>
+      <log message="File received \n${headers}"/>
+      <setHeader headerName="CamelFileName">
+        <simple>${in.headers.CamelAwsS3Key}</simple>
+      </setHeader>
+      <to uri="file:/tmp/s3-out"/>
+      <log message="File saved \n${headers}"/>
+    </route>
+
   </camelContext>
 </beans>
