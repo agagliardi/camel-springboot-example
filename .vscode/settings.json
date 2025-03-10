@@ -3,5 +3,6 @@
         "lib/**/*.jar",
         "/home/agagliar/.config/Code/User/globalStorage/redhat.vscode-camelk/java-dependencies-3.5.0/*.jar"
     ],
-    "java.configuration.updateBuildConfiguration": "automatic"
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.compile.nullAnalysis.mode": "automatic"
 }
