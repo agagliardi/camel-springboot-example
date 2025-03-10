@@ -9,22 +9,19 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <!--
-           <version.fuse>7.7.0.fuse-sb2-770010-redhat-00001</version.fuse>
-           <version.fuse>7.8.0.fuse-sb2-780038-redhat-00001</version.fuse>
-        <version.fuse>7.10.0.fuse-sb2-7_10_0-00014-redhat-00001</version.fuse>        
-        -->
-    <version.fuse>7.10.0.fuse-sb2-7_10_0-00019-redhat-00002</version.fuse>
+    <version.csb>4.0.0.redhat-00045</version.csb>
   </properties>
   <dependencyManagement>
     <dependencies>
+      <!-- Camel BOM -->
       <dependency>
-        <groupId>org.jboss.redhat-fuse</groupId>
-        <artifactId>fuse-springboot-bom</artifactId>
-        <version>${version.fuse}</version>
+        <groupId>com.redhat.camel.springboot.platform</groupId>
+        <artifactId>camel-spring-boot-bom</artifactId>
+        <version>${version.csb}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <!-- ... other BOMs or dependencies ... -->
     </dependencies>
   </dependencyManagement>
   <dependencies>
@@ -49,12 +46,17 @@
     </dependency>
     <!-- Camel -->
     <dependency>
-      <groupId>org.apache.camel</groupId>
+      <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-spring-boot-starter</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.camel</groupId>
+      <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-stream-starter</artifactId>
+    </dependency>
+    <!-- Camel XML Support -->
+    <dependency>
+        <groupId>org.apache.camel.springboot</groupId>
+        <artifactId>camel-xml-jaxb-starter</artifactId>
     </dependency>
     <!-- Test -->
     <dependency>
@@ -64,38 +66,31 @@
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-test-spring</artifactId>
+      <artifactId>camel-test-spring-junit5</artifactId>
+      <version>4.0.0.redhat-00036</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
   <build>
     <plugins>
       <plugin>
-        <groupId>org.jboss.redhat-fuse</groupId>
+        <groupId>com.redhat.camel.springboot.platform</groupId>
         <artifactId>patch-maven-plugin</artifactId>
-        <version>${version.fuse}</version>
+        <version>${version.csb}</version>
         <extensions>true</extensions>
       </plugin>
       <plugin>
-        <groupId>org.jboss.redhat-fuse</groupId>
+        <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <version> ${version.fuse}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>repackage</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <source>11</source>
+          <target>11</target>
         </configuration>
-      </plugin>      
+      </plugin>
     </plugins>
   </build>
 </project>

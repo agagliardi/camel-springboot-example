@@ -1,6 +1,7 @@
 package com.redhat.reproducer;
 
 import org.apache.camel.builder.RouteBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,9 +13,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class MySpringBootRouter extends RouteBuilder {
 
+    @Value("greeting")
+    private String greeting;
+
+    @Value("${timer.period}")
+    private Long timer;
+
     @Override
     public void configure() {
-        from("timer://foo?fixedRate=true&period=1000").routeId("javaDSL").to("log:hello from Java DSL");
+        from("timer://foo?fixedRate=true&period="+timer).routeId("javaDSL").to("log:"+greeting+" every "+timer);
     }
 
 }
