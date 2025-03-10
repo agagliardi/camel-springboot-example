@@ -1,12 +1,24 @@
-{"properties": [
-  {
-    "name": "greeting",
-    "type": "java.lang.String",
-    "description": "A description for 'greeting'"
-  },
-  {
-    "name": "timer.period",
-    "type": "java.lang.String",
-    "description": "A description for 'timer.period'"
-  }
-]}
+{
+  "properties": [
+    {
+      "name": "greeting",
+      "type": "java.lang.String",
+      "description": "A description for 'greeting'"
+    },
+    {
+      "name": "timer.period",
+      "type": "java.lang.String",
+      "description": "A description for 'timer.period'"
+    },
+    {
+      "name": "destination",
+      "type": "java.lang.String",
+      "description": "A description for 'destination'"
+    },
+    {
+      "name": "brokerURL",
+      "type": "java.lang.String",
+      "description": "A description for 'brokerURL'"
+    }
+  ]
+}
